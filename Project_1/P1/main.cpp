@@ -18,14 +18,14 @@ SDL_Window* displayWindow;
 bool gameIsRunning = true;
 
 ShaderProgram program;
-glm::mat4 viewMatrix, ctgMatrix, projectionMatrix, chiefMatrix;
+glm::mat4 viewMatrix, ctgMatrix, projectionMatrix, chiefMatrix, shipMatrix;
 
 float player_x = 0;
 float chief_x = -4.5, chief_y = 3.0;
 float chief_scale_x = 1.0, chief_scale_y = 1.0;
 float player_rotate_clockwise = 0, player_rotate_counter = 0;
 
-GLuint playerTextureID, cheifTextureID;
+GLuint playerTextureID, cheifTextureID, shipTextureID;
 GLuint LoadTexture(const char* filePath)
 {
     int w, h, n;
@@ -65,11 +65,11 @@ void Initialize() {
     viewMatrix = glm::mat4(1.0f);
     ctgMatrix = glm::mat4(1.0f);
     chiefMatrix = glm::mat4(1.0f);
+    shipMatrix = glm::mat4(1.0f);
     projectionMatrix = glm::ortho(-5.0f, 5.0f, -3.75f, 3.75f, -1.0f, 1.0f);
 
     program.SetProjectionMatrix(projectionMatrix);
     program.SetViewMatrix(viewMatrix);
-    //program.SetColor(1.0f, 5.0f, 0.0f, 1.0f);
 
     glUseProgram(program.programID);
 
@@ -83,6 +83,7 @@ void Initialize() {
     //cheifTextureID = LoadTexture("IU.jpg");
     playerTextureID = LoadTexture("ctg.png");
     cheifTextureID = LoadTexture("mchief.png");
+    shipTextureID = LoadTexture("ship.png");
 }
 
 void ProcessInput() {
@@ -147,7 +148,10 @@ void Update()
     chiefMatrix = glm::translate(chiefMatrix, glm::vec3(chief_x, chief_y, 0.0f));
     chiefMatrix = glm::scale(chiefMatrix, glm::vec3(chief_scale_x, chief_scale_y, 1.0f));
 
-    
+    shipMatrix = glm::mat4(1.0f);
+    shipMatrix = glm::translate(shipMatrix, glm::vec3(4.0f, -3.0f, 0.0f));
+    shipMatrix = glm::rotate(shipMatrix, glm::radians(player_rotate_counter), glm::vec3(0.0f, 0.0f, 1.0f));
+
 }
 
 void DrawOne()
@@ -166,8 +170,8 @@ void DrawTwo()
 
 void DrawThree()
 {
-    program.SetModelMatrix(ctgMatrix);
-    glBindTexture(GL_TEXTURE_2D, playerTextureID);
+    program.SetModelMatrix(shipMatrix);
+    glBindTexture(GL_TEXTURE_2D, shipTextureID);
     glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
@@ -182,9 +186,6 @@ void Render() {
     glVertexAttribPointer(program.texCoordAttribute, 2, GL_FLOAT, false, 0, texCoords);
     glEnableVertexAttribArray(program.texCoordAttribute);
 
-    /* program.SetModelMatrix(ctgMatrix);
-     glBindTexture(GL_TEXTURE_2D, playerTextureID);
-     glDrawArrays(GL_TRIANGLES, 0, 6);*/
 
     DrawOne();
     DrawTwo();

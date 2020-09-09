@@ -1,7 +1,7 @@
 ﻿  ShaderProgram.cpp
   main.cpp
 C:\Users\Kevin\Documents\CS-UY 3113\CS-UY-3113\Project_1\P1\main.cpp(15,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-C:\Users\Kevin\Documents\CS-UY 3113\CS-UY-3113\Project_1\P1\main.cpp(142,38): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
 C:\Users\Kevin\Documents\CS-UY 3113\CS-UY-3113\Project_1\P1\main.cpp(143,38): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Kevin\Documents\CS-UY 3113\CS-UY-3113\Project_1\P1\main.cpp(144,38): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
   Generating Code...
   SDLProject.vcxproj -> C:\Users\Kevin\Documents\CS-UY 3113\CS-UY-3113\Project_1\P1\Debug\SDLProject.exe
