@@ -1,0 +1,6 @@
+﻿  main.cpp
+C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P2\main.cpp(17,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P2\main.cpp(71,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P2\main.cpp(95,5): error C2043: illegal break
+C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P2\main.cpp(312,96): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P2\main.cpp(314,96): warning C4305: 'initializing': truncation from 'double' to 'float'
