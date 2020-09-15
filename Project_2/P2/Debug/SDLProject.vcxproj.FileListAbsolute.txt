@@ -2,3 +2,5 @@ C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\Visual
 C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\SDLProject\Debug\SDLProject.pdb
 C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P2\Debug\SDLProject.exe
 C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P2\Debug\SDLProject.pdb
+C:\Users\Kevin\Documents\CS-UY 3113\CS-UY-3113\Project_2\P2\Debug\SDLProject.exe
+C:\Users\Kevin\Documents\CS-UY 3113\CS-UY-3113\Project_2\P2\Debug\SDLProject.pdb

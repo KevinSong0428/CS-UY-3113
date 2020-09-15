@@ -68,7 +68,7 @@ void DrawText(ShaderProgram* program, GLuint fontTextureID, std::string text,
     std::vector<float> vertices;
     std::vector<float> texCoords;
 
-    for (int i = 0; i < text.size(); i++) 
+    for (int i = 0; i < text.size(); i++)
     {
         int index = (int)text[i];
         float offset = (size + spacing) * i;
@@ -150,7 +150,7 @@ bool restartGame = false;
 bool gameStart = false;
 bool freezePaddle = false;
 
-void ProcessInput() 
+void ProcessInput()
 {
 
     //IMPORTANT --> wanna reset player movement to zero (if nothing is pressed, don't wanna move
@@ -192,7 +192,7 @@ void ProcessInput()
     }
 
     const Uint8* keys = SDL_GetKeyboardState(NULL);
-    
+
     //hold up OR down key
     if (keys[SDL_SCANCODE_UP] && right_position.y < 2.85)
     {
@@ -287,15 +287,16 @@ void drawObject(float* vertices)
 }
 
 
-void Render() 
+void Render()
 {
     DrawText(&program, fontTextureID, "Press", 0.5, -0.25, glm::vec3(0));
     //if the ball has reached one of the sides, it can no longer move
     //set the ball movement to zero
-    if (gameOver)
+    if (gameOver) ball_movement = glm::vec3(0);
+
+    if (gameOver && !restartGame)
     {
         /*DrawText(&program, fontTextureID, "Press 'Space' to reset and space again to start", 0.5, -0.25, glm::vec3(0, 0, 0));*/
-        ball_movement = glm::vec3(0);
     }
 
     if (restartGame)
@@ -306,7 +307,7 @@ void Render()
     }
 
     glClear(GL_COLOR_BUFFER_BIT);
- 
+
     float Ball[] = { -0.25, -0.25, 0.25, -0.25, 0.25, 0.25, -0.25, -0.25, 0.25, 0.25, -0.25, 0.25 };
     //vertices left paddle
     float LPaddle[] = { -0.25, -0.9, 0.25, -0.9, 0.25, 0.9, -0.25, -0.9, 0.25, 0.9, -0.25, 0.9 };
@@ -323,7 +324,7 @@ void Render()
     SDL_GL_SwapWindow(displayWindow);
 }
 
-void Shutdown() 
+void Shutdown()
 {
     SDL_Quit();
 }
