@@ -33,7 +33,8 @@ glm::vec3 ball_movement = glm::vec3(0, 0, 0);
 
 
 float player_speed = 1.0f;
-
+bool RScore = false, LScore = false;
+int Lpoints = 0, Rpoints = 0;
 
 //LOADING TEXTURE CODE
 GLuint blockTextureID, fontTextureID;
@@ -68,7 +69,7 @@ void DrawText(ShaderProgram* program, GLuint fontTextureID, std::string text,
     std::vector<float> vertices;
     std::vector<float> texCoords;
 
-    for (int i = 0; i < text.size(); i++)
+    for (int i = 0; i < text.size(); i++) 
     {
         int index = (int)text[i];
         float offset = (size + spacing) * i;
@@ -142,6 +143,10 @@ void Initialize() {
 
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+
     fontTextureID = LoadTexture("font1.png");
 }
 
@@ -150,7 +155,7 @@ bool restartGame = false;
 bool gameStart = false;
 bool freezePaddle = false;
 
-void ProcessInput()
+void ProcessInput() 
 {
 
     //IMPORTANT --> wanna reset player movement to zero (if nothing is pressed, don't wanna move
@@ -171,10 +176,10 @@ void ProcessInput()
             case SDLK_SPACE:
                 if (gameOver && gameStart)
                 {
-                    freezePaddle = false;
                     restartGame = true;
+                    ball_position = glm::vec3(0, 0, 0);
+                    RScore = false, LScore = false;
                     gameOver = false;
-                    gameStart = false;
                 }
                 //ball starts to move --> increases position
                 if (!gameStart)
@@ -192,7 +197,7 @@ void ProcessInput()
     }
 
     const Uint8* keys = SDL_GetKeyboardState(NULL);
-
+    
     //hold up OR down key
     if (keys[SDL_SCANCODE_UP] && right_position.y < 2.85)
     {
@@ -216,17 +221,41 @@ void ProcessInput()
 
 float lastTicks = 0.0f;
 
+void LAddPoint()
+{
+    Lpoints++;
+}
+void RAddPoint()
+{
+    Rpoints++;
+}
 
 //ball movements are 3.0
 //paddle movements are 2.5
 void Update()
 {
     //game has to stop (paddle and ball does not and cannot be moved)
-    if (ball_position.x >= 4.75 || ball_position.x <= -4.75)
+    if (ball_position.x >= 4.75)
     {
+        if (!RScore && !LScore)
+        {
+            RAddPoint();
+        }
+        LScore = true;
         gameOver = true;
         freezePaddle = true;
     }
+    if (ball_position.x <= -4.75)
+    {
+        if (!RScore && !LScore)
+        {
+            LAddPoint();
+        }
+        RScore = true;
+        gameOver = true;
+        freezePaddle = true;
+    }
+
     float ticks = (float)SDL_GetTicks() / 1000.0f;
     float deltaTime = ticks - lastTicks;
     lastTicks = ticks;
@@ -287,27 +316,29 @@ void drawObject(float* vertices)
 }
 
 
-void Render()
+void Render() 
 {
-    DrawText(&program, fontTextureID, "Press", 0.5, -0.25, glm::vec3(0));
+    glClear(GL_COLOR_BUFFER_BIT);
+
     //if the ball has reached one of the sides, it can no longer move
     //set the ball movement to zero
     if (gameOver) ball_movement = glm::vec3(0);
 
-    if (gameOver && !restartGame)
-    {
-        /*DrawText(&program, fontTextureID, "Press 'Space' to reset and space again to start", 0.5, -0.25, glm::vec3(0, 0, 0));*/
-    }
+    DrawText(&program, fontTextureID, std::to_string(Lpoints), 0.5, -0.1, glm::vec3(-2.5, 3.3, 0));
+    DrawText(&program, fontTextureID, std::to_string(Rpoints), 0.5, -0.1, glm::vec3(2.5, 3.3, 0));
+
+    if (gameOver && !restartGame) DrawText(&program, fontTextureID, "Press 'Space' to Reset", 0.5, -0.1, glm::vec3(-4.2, 1.0, 0));
+
+    if (!gameStart) DrawText(&program, fontTextureID, "Press 'Space' to Start", 0.5, -0.1, glm::vec3(-4.2, 1.0, 0));
 
     if (restartGame)
     {
+        gameStart = false;
         freezePaddle = false;
         ball_position = glm::vec3(0, 0, 0);
         restartGame = false;
     }
-
-    glClear(GL_COLOR_BUFFER_BIT);
-
+ 
     float Ball[] = { -0.25, -0.25, 0.25, -0.25, 0.25, 0.25, -0.25, -0.25, 0.25, 0.25, -0.25, 0.25 };
     //vertices left paddle
     float LPaddle[] = { -0.25, -0.9, 0.25, -0.9, 0.25, 0.9, -0.25, -0.9, 0.25, 0.9, -0.25, 0.9 };
@@ -324,7 +355,7 @@ void Render()
     SDL_GL_SwapWindow(displayWindow);
 }
 
-void Shutdown()
+void Shutdown() 
 {
     SDL_Quit();
 }
