@@ -1,8 +1,12 @@
 ﻿  main.cpp
 C:\Users\Kevin\Documents\CS-UY 3113\CS-UY-3113\Project_2\P2\main.cpp(17,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-C:\Users\Kevin\Documents\CS-UY 3113\CS-UY-3113\Project_2\P2\main.cpp(71,23): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Kevin\Documents\CS-UY 3113\CS-UY-3113\Project_2\P2\main.cpp(313,96): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\Kevin\Documents\CS-UY 3113\CS-UY-3113\Project_2\P2\main.cpp(315,96): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\Kevin\Documents\CS-UY 3113\CS-UY-3113\Project_2\P2\main.cpp(72,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Kevin\Documents\CS-UY 3113\CS-UY-3113\Project_2\P2\main.cpp(327,98): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Kevin\Documents\CS-UY 3113\CS-UY-3113\Project_2\P2\main.cpp(328,97): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Kevin\Documents\CS-UY 3113\CS-UY-3113\Project_2\P2\main.cpp(330,129): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Kevin\Documents\CS-UY 3113\CS-UY-3113\Project_2\P2\main.cpp(332,115): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Kevin\Documents\CS-UY 3113\CS-UY-3113\Project_2\P2\main.cpp(344,96): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\Kevin\Documents\CS-UY 3113\CS-UY-3113\Project_2\P2\main.cpp(346,96): warning C4305: 'initializing': truncation from 'double' to 'float'
   ShaderProgram.cpp
   Generating Code...
   SDLProject.vcxproj -> C:\Users\Kevin\Documents\CS-UY 3113\CS-UY-3113\Project_2\P2\Debug\SDLProject.exe
