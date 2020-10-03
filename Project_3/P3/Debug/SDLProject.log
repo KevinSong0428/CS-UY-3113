@@ -1,0 +1,15 @@
+﻿  main.cpp
+C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P3\main.cpp(71,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P3\main.cpp(252,48): warning C4305: '+=': truncation from 'double' to 'T'
+          with
+          [
+              T=float
+          ]
+C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P3\main.cpp(258,47): warning C4305: '+=': truncation from 'double' to 'T'
+          with
+          [
+              T=float
+          ]
+C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P3\main.cpp(329,93): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P3\main.cpp(334,94): warning C4305: 'argument': truncation from 'double' to 'float'
+  SDLProject.vcxproj -> C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P3\Debug\SDLProject.exe
