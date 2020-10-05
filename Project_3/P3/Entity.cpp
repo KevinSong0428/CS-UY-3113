@@ -23,8 +23,6 @@ bool Entity::CheckCollision(Entity* other)
     return false;
 }
 
-//if collided --> see how much collided into the other platform
-//if into the platofrm below, move object up that penetration amount
 void Entity::CheckCollisionsY(Entity* objects, int objectCount)
 {
     for (int i = 0; i < objectCount; i++)
@@ -53,8 +51,6 @@ void Entity::CheckCollisionsY(Entity* objects, int objectCount)
     }
 }
 
-//if collided --> see how much collided into the other platform
-//if into the platofrm below, move object down that penetration amount
 void Entity::CheckCollisionsX(Entity* objects, int objectCount)
 {
     for (int i = 0; i < objectCount; i++)

@@ -91,7 +91,7 @@ void DrawText(ShaderProgram* program, GLuint fontTextureID, std::string text,
         u, v + height,
             });
 
-    } // end of for loop
+    }
 
     glm::mat4 modelMatrix = glm::mat4(1.0f);
     modelMatrix = glm::translate(modelMatrix, position);
@@ -234,13 +234,6 @@ void ProcessInput() {
         case SDL_WINDOWEVENT_CLOSE:
             gameIsRunning = false;
             break;
-
-        case SDL_KEYDOWN:
-            switch (event.key.keysym.sym) {
-            case SDLK_SPACE:
-                break;
-            }
-            break; // SDL_KEYDOWN
         }
     }
 

@@ -22,7 +22,7 @@ public:
     float height = 1;
 
     float speed;
-
+     
     GLuint textureID;
 
     glm::mat4 modelMatrix;
