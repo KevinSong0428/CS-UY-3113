@@ -222,7 +222,7 @@ void Entity::AI(Entity* player)
 
 }
 
-void Entity::Update(float deltaTime, Entity* player, Entity* platforms, int platformCount)
+void Entity::Update(float deltaTime, Entity* player, Entity* enemies, int enemyCount, Entity* platforms, int platformCount)
 {
     if (isActive == false) return;
     collidedTop = false;
@@ -268,6 +268,40 @@ void Entity::Update(float deltaTime, Entity* player, Entity* platforms, int plat
 
     position.x += velocity.x * deltaTime; 
     CheckCollisionsX(platforms, platformCount);
+
+    CheckCollisionsX(enemies, enemyCount);
+    CheckCollisionsY(enemies, enemyCount);
+    
+    CheckCollisionsX(player, enemyCount);
+    CheckCollisionsY(player, enemyCount);
+
+    if (entityType == ENEMY)
+    {
+        if (collidedTop)
+        {
+            isActive = false;
+        }
+        if (collidedLeft || collidedRight)
+        {
+            player->isActive = false;
+        }
+    }
+
+    if (entityType == PLAYER)
+    {
+        if (LastCollided == ENEMY)
+        {
+            if (collidedLeft || collidedRight || collidedTop)
+            {
+                isActive = false;
+            }
+            else if (collidedBottom)
+            {
+                LastCollidedEntity->isActive = false;
+            }
+        }
+        if (position.y < -3.75) isActive = false;
+    }
 
     modelMatrix = glm::mat4(1.0f);
     modelMatrix = glm::translate(modelMatrix, position);

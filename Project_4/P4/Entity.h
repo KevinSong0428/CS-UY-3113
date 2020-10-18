@@ -69,7 +69,7 @@ public:
     void CheckCollisionsY(Entity* objects, int objectCount);
     void CheckCollisionsX(Entity* objects, int objectCount);
     bool CheckCollision(Entity* other);
-    void Update(float deltaTime, Entity* player, Entity* platforms, int platformCount);
+    void Update(float deltaTime, Entity* player, Entity* enemy, int enemyCount, Entity* platforms, int platformCount);
     void Render(ShaderProgram* program);
     void DrawSpriteFromTextureAtlas(ShaderProgram* program, GLuint textureID, int index);
 

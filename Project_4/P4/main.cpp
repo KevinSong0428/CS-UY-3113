@@ -218,7 +218,7 @@ void Initialize()
 
     for (int i = 0; i < PLATFORM_COUNT; i++)
     {
-        state.platforms[i].Update(0, NULL, NULL, 0);
+        state.platforms[i].Update(0, NULL, NULL, 0, NULL, 0);
     }
 
     
@@ -322,44 +322,44 @@ void Update()
         return;
     }
     while (deltaTime >= FIXED_TIMESTEP) {
-        //state.player->Update(FIXED_TIMESTEP, state.platforms, state.platforms, PLATFORM_COUNT);
-        state.player->Update(FIXED_TIMESTEP, state.enemies, state.platforms, PLATFORM_COUNT);
+        state.player->Update(FIXED_TIMESTEP, state.player, state.enemies, ENEMY_COUNT, state.platforms, PLATFORM_COUNT);
+        //state.player->Update(FIXED_TIMESTEP, state.enemies, state.platforms, PLATFORM_COUNT);
 
         for (int i = 0; i < ENEMY_COUNT; i++)
         {
-            state.enemies[i].Update(FIXED_TIMESTEP, state.player, state.platforms, PLATFORM_COUNT);
+            state.enemies[i].Update(FIXED_TIMESTEP, state.player, &state.enemies[i], ENEMY_COUNT, state.platforms, PLATFORM_COUNT);
         }
 
         deltaTime -= FIXED_TIMESTEP;
     }
 
-    state.player->CheckCollisionsX(state.enemies, ENEMY_COUNT);
-    state.player->CheckCollisionsY(state.enemies, ENEMY_COUNT);
+    //state.player->CheckCollisionsX(state.enemies, ENEMY_COUNT);
+    //state.player->CheckCollisionsY(state.enemies, ENEMY_COUNT);
     
 
-    for (int i = 0; i < ENEMY_COUNT; i++)
-    {
-        state.enemies[i].CheckCollisionsX(state.player, 1);
-        if (state.enemies[i].collidedLeft || state.enemies[i].collidedRight)
-        {
-            state.player->isActive = false;
-        }
-    }
+    //for (int i = 0; i < ENEMY_COUNT; i++)
+    //{
+    //    state.enemies[i].CheckCollisionsX(state.player, 1);
+    //    if (state.enemies[i].collidedLeft || state.enemies[i].collidedRight)
+    //    {
+    //        state.player->isActive = false;
+    //    }
+    //}
     
     //if (state.player->LastCollided == ENEMY || state.enemies[0].LastCollided == PLAYER)
-    if (state.player->LastCollided == ENEMY)
-    {
-        if (state.player->collidedLeft || state.player->collidedRight || state.player->collidedTop)
-        {
-            state.player->isActive = false;
-        }
-        else if (state.player->collidedBottom)
-        {
-            state.player->LastCollidedEntity->isActive = false;
-        }
-    }
+    //if (state.player->LastCollided == ENEMY)
+    //{
+    //    if (state.player->collidedLeft || state.player->collidedRight || state.player->collidedTop)
+    //    {
+    //        state.player->isActive = false;
+    //    }
+    //    else if (state.player->collidedBottom)
+    //    {
+    //        state.player->LastCollidedEntity->isActive = false;
+    //    }
+    //}
 
-    if (state.player->position.y < -3.75) state.player->isActive = false;
+    //if (state.player->position.y < -3.75) state.player->isActive = false;
     
     if (!state.player->isActive) gameFailed = true;
     accumulator = deltaTime;
