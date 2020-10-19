@@ -174,7 +174,7 @@ void Initialize()
 
     state.player->height = 0.8f;
     state.player->width = 0.8f;
-    state.player->jumpPower = 5.5f;
+    state.player->jumpPower = 6.0f;
 
     //make new platform and initialize
     

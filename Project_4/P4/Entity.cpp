@@ -47,7 +47,6 @@ void Entity::CheckCollisionsY(Entity* objects, int objectCount)
                 collidedTop = true;
                 LastCollided = object->entityType;
                 LastCollidedEntity = object;
-                
             }
             else if (velocity.y < 0) 
             {
@@ -60,6 +59,7 @@ void Entity::CheckCollisionsY(Entity* objects, int objectCount)
                 {
                     if (LastCollided == ENEMY)
                     {
+                        position.y -= penetrationY;
                         LastCollidedEntity->isActive = false;
                     }
                 }
@@ -87,6 +87,10 @@ void Entity::CheckCollisionsX(Entity* objects, int objectCount)
                 collidedRight = true;
                 LastCollided = object->entityType;
                 LastCollidedEntity = object;
+                if (entityType == PLAYER && LastCollided == ENEMY)
+                {
+                    position.x += penetrationX;
+                }
             }
             else if (velocity.x < 0) 
             {
@@ -95,6 +99,10 @@ void Entity::CheckCollisionsX(Entity* objects, int objectCount)
                 collidedLeft = true;
                 LastCollided = object->entityType;
                 LastCollidedEntity = object;
+                if (entityType == PLAYER && LastCollided == ENEMY)
+                {
+                    position.x -= penetrationX;
+                }
             }
         }
     }
@@ -294,21 +302,7 @@ void Entity::Update(float deltaTime, Entity* player, Entity* enemies, int enemyC
         }
     }
 
-    if (entityType == PLAYER)
-    {
-        //if (LastCollided == ENEMY)
-        //{
-        //    if (collidedLeft || collidedRight || collidedTop)
-        //    {
-        //        isActive = false;
-        //    }
-        //    //else if (collidedBottom)
-        //    //{
-        //    //    LastCollidedEntity->isActive = false;
-        //    //}
-        //}
-        if (position.y < -3.75) isActive = false;
-    }
+    if (entityType == PLAYER && position.y < -3.75) isActive = false;
 
     modelMatrix = glm::mat4(1.0f);
     modelMatrix = glm::translate(modelMatrix, position);
