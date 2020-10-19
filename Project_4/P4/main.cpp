@@ -174,7 +174,7 @@ void Initialize()
 
     state.player->height = 0.8f;
     state.player->width = 0.8f;
-    state.player->jumpPower = 5.0f;
+    state.player->jumpPower = 5.5f;
 
     //make new platform and initialize
     
@@ -332,34 +332,6 @@ void Update()
 
         deltaTime -= FIXED_TIMESTEP;
     }
-
-    //state.player->CheckCollisionsX(state.enemies, ENEMY_COUNT);
-    //state.player->CheckCollisionsY(state.enemies, ENEMY_COUNT);
-    
-
-    //for (int i = 0; i < ENEMY_COUNT; i++)
-    //{
-    //    state.enemies[i].CheckCollisionsX(state.player, 1);
-    //    if (state.enemies[i].collidedLeft || state.enemies[i].collidedRight)
-    //    {
-    //        state.player->isActive = false;
-    //    }
-    //}
-    
-    //if (state.player->LastCollided == ENEMY || state.enemies[0].LastCollided == PLAYER)
-    //if (state.player->LastCollided == ENEMY)
-    //{
-    //    if (state.player->collidedLeft || state.player->collidedRight || state.player->collidedTop)
-    //    {
-    //        state.player->isActive = false;
-    //    }
-    //    else if (state.player->collidedBottom)
-    //    {
-    //        state.player->LastCollidedEntity->isActive = false;
-    //    }
-    //}
-
-    //if (state.player->position.y < -3.75) state.player->isActive = false;
     
     if (!state.player->isActive) gameFailed = true;
     accumulator = deltaTime;

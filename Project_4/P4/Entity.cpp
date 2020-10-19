@@ -40,13 +40,14 @@ void Entity::CheckCollisionsY(Entity* objects, int objectCount)
         {
             float ydist = fabs(position.y - object->position.y);
             float penetrationY = fabs(ydist - (height / 2.0f) - (object->height / 2.0f));
-            if (velocity.y > 0) 
+            if (velocity.y > 0)
             {
                 position.y -= penetrationY;
                 velocity.y = 0;
                 collidedTop = true;
                 LastCollided = object->entityType;
                 LastCollidedEntity = object;
+                
             }
             else if (velocity.y < 0) 
             {
@@ -55,6 +56,13 @@ void Entity::CheckCollisionsY(Entity* objects, int objectCount)
                 collidedBottom = true;
                 LastCollided = object->entityType;
                 LastCollidedEntity = object;
+                if (entityType == PLAYER)
+                {
+                    if (LastCollided == ENEMY)
+                    {
+                        LastCollidedEntity->isActive = false;
+                    }
+                }
             }
         }
     }
@@ -277,29 +285,28 @@ void Entity::Update(float deltaTime, Entity* player, Entity* enemies, int enemyC
 
     if (entityType == ENEMY)
     {
-        if (collidedTop)
+        if (LastCollidedEntity == player)
         {
-            isActive = false;
-        }
-        if (collidedLeft || collidedRight)
-        {
-            player->isActive = false;
+            if (collidedLeft || collidedRight)
+            {
+                player->isActive = false;
+            }
         }
     }
 
     if (entityType == PLAYER)
     {
-        if (LastCollided == ENEMY)
-        {
-            if (collidedLeft || collidedRight || collidedTop)
-            {
-                isActive = false;
-            }
-            else if (collidedBottom)
-            {
-                LastCollidedEntity->isActive = false;
-            }
-        }
+        //if (LastCollided == ENEMY)
+        //{
+        //    if (collidedLeft || collidedRight || collidedTop)
+        //    {
+        //        isActive = false;
+        //    }
+        //    //else if (collidedBottom)
+        //    //{
+        //    //    LastCollidedEntity->isActive = false;
+        //    //}
+        //}
         if (position.y < -3.75) isActive = false;
     }
 
