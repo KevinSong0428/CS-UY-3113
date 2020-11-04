@@ -116,13 +116,13 @@ void DrawText(ShaderProgram* program, GLuint fontTextureID, std::string text,
     glDisableVertexAttribArray(program->texCoordAttribute);
 }
 
-void Initialize() 
+void Initialize()
 {
     SDL_Init(SDL_INIT_VIDEO);
     displayWindow = SDL_CreateWindow("Textured!", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_OPENGL);
     SDL_GLContext context = SDL_GL_CreateContext(displayWindow);
     SDL_GL_MakeCurrent(displayWindow, context);
-    
+
 #ifdef _WINDOWS
     glewInit();
 #endif
@@ -177,8 +177,8 @@ void Initialize()
     state.player->jumpPower = 6.0f;
 
     //make new platform and initialize
-    
-    
+
+
     GLuint platformTextureID = LoadTexture("platformPack_tile042.png");
     fontTextureID = LoadTexture("font1.png");
 
@@ -190,7 +190,7 @@ void Initialize()
 
     //left floor 0 1 2 3
     for (int i = 0; i < 4; i++)
-    {        
+    {
         state.platforms[i].position = glm::vec3(-4.5 + i, -3.25, 0);
     }
 
@@ -221,9 +221,9 @@ void Initialize()
         state.platforms[i].Update(0, NULL, NULL, 0, NULL, 0);
     }
 
-    
+
     GLuint enemyTextureID = LoadTexture("mushroom.png");
-    
+
     for (int i = 0; i < ENEMY_COUNT; i++)
     {
         state.enemies[i].entityType = ENEMY;
@@ -325,16 +325,14 @@ void Update()
         state.player->Update(FIXED_TIMESTEP, state.player, state.enemies, ENEMY_COUNT, state.platforms, PLATFORM_COUNT);
         //state.player->Update(FIXED_TIMESTEP, state.enemies, state.platforms, PLATFORM_COUNT);
 
-        /*
         for (int i = 0; i < ENEMY_COUNT; i++)
         {
             state.enemies[i].Update(FIXED_TIMESTEP, state.player, &state.enemies[i], ENEMY_COUNT, state.platforms, PLATFORM_COUNT);
         }
-        */
 
         deltaTime -= FIXED_TIMESTEP;
     }
-    
+
     if (!state.player->isActive) gameFailed = true;
     accumulator = deltaTime;
 }
@@ -355,14 +353,12 @@ void Render()
     }
     state.player->Render(&program);
 
-    /*
     if (!state.enemies[0].isActive &&
         !state.enemies[1].isActive &&
         !state.enemies[2].isActive)
     {
         DrawText(&program, fontTextureID, "You Win!", 0.5, -0.1, glm::vec3(-1.3, 0, 0));
     }
-    */
 
     if (gameFailed && !gameSuccess)
     {

@@ -1,2 +1,5 @@
-﻿  Entity.cpp
-  SDLProject.vcxproj -> C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P4\Debug\SDLProject.exe
+﻿  main.cpp
+C:\Users\Kevin\Documents\CS-UY 3113\CS-UY-3113\Project_4\P4\main.cpp(75,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Kevin\Documents\CS-UY 3113\CS-UY-3113\Project_4\P4\main.cpp(360,87): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Kevin\Documents\CS-UY 3113\CS-UY-3113\Project_4\P4\main.cpp(365,89): warning C4305: 'argument': truncation from 'double' to 'float'
+  SDLProject.vcxproj -> C:\Users\Kevin\Documents\CS-UY 3113\CS-UY-3113\Project_4\P4\Debug\SDLProject.exe
