@@ -325,10 +325,12 @@ void Update()
         state.player->Update(FIXED_TIMESTEP, state.player, state.enemies, ENEMY_COUNT, state.platforms, PLATFORM_COUNT);
         //state.player->Update(FIXED_TIMESTEP, state.enemies, state.platforms, PLATFORM_COUNT);
 
+        /*
         for (int i = 0; i < ENEMY_COUNT; i++)
         {
             state.enemies[i].Update(FIXED_TIMESTEP, state.player, &state.enemies[i], ENEMY_COUNT, state.platforms, PLATFORM_COUNT);
         }
+        */
 
         deltaTime -= FIXED_TIMESTEP;
     }
@@ -353,12 +355,14 @@ void Render()
     }
     state.player->Render(&program);
 
+    /*
     if (!state.enemies[0].isActive &&
         !state.enemies[1].isActive &&
         !state.enemies[2].isActive)
     {
         DrawText(&program, fontTextureID, "You Win!", 0.5, -0.1, glm::vec3(-1.3, 0, 0));
     }
+    */
 
     if (gameFailed && !gameSuccess)
     {
