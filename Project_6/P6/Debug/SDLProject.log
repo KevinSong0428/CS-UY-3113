@@ -1,9 +1,0 @@
-﻿  main.cpp
-C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P6\main.cpp(155,16): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P6\main.cpp(156,16): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P6\main.cpp(256,158): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P6\main.cpp(257,162): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P6\main.cpp(258,138): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P6\main.cpp(264,82): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P6\main.cpp(269,83): warning C4305: 'argument': truncation from 'double' to 'float'
-  SDLProject.vcxproj -> C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P6\Debug\SDLProject.exe
