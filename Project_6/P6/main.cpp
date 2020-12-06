@@ -32,7 +32,6 @@ Scene* sceneList[2];
 
 int score = 0;
 
-
 void SwitchToScene(Scene* scene) {
     currentScene = scene;
     currentScene->Initialize();
@@ -45,9 +44,10 @@ Mix_Chunk* gameSuccess;
 Mix_Chunk* gameFailed;
 
 //timer varaible
-float seconds = -1.0;
 time_t start;
 
+//durationTime = how long target is active for every level
+int durationTime;
 void Initialize() {
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
     displayWindow = SDL_CreateWindow("Aim Training", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, SDL_WINDOW_OPENGL);
@@ -94,24 +94,29 @@ void Initialize() {
     {
         start = time(0);
     }
+
+    
+    //6 - 5 - 4 - 3 - 2
+    durationTime = 7 - currentScene->state.level;
 }
 
-bool CheckCollision(Entity* mouse, Entity* other)
+bool CheckCollision(int unit_x, int unit_y, Entity* other)
 {
     if (other->isActive == false) return false;
-    if (mouse->position.x >= other->position.x &&                       // right of the left edge
-        mouse->position.x <= other->position.x + other->width &&        // left of the right edge
-        mouse->position.y >= other->position.y &&                       // below the top
-        mouse->position.y <= other->position.y + other->height) {       // above the bottom
+    if (unit_x >= other->position.x &&                       // right of the left edge
+        unit_x <= other->position.x + other->width &&        // left of the right edge
+        unit_y >= other->position.y &&                       // below the top
+        unit_y <= other->position.y + other->height) {       // above the bottom
         return true;
     }
     return false;
 }
 
+float val1 = 0;
+int val2 = 0;
 
-void ProcessInput() {
-
-    currentScene->state.mouse->movement = glm::vec3(0);
+void ProcessInput() 
+{
 
     SDL_Event event;
     while (SDL_PollEvent(&event))
@@ -137,24 +142,38 @@ void ProcessInput() {
         case SDL_MOUSEBUTTONDOWN:
             int x = event.button.x;
             int y = event.button.y;
-            int unit_x = ((x / 1280) * 18) - (18 / 2.0);
-            int unit_y = (((1280 - y) / 32) * 720) - (720 / 2.0);
+            int button = event.button.button;   // button that was clicked (1,2,3)
+
+            int unit_x = ((x / 1280.0) * 32.0) - (32.0 / 2.0);
+            int unit_y = (((720.0 - y) / 720.0) * 18.0) - (18.0 / 2.0);
+            //if (unit_x == x/1280 * 32 - 16) Mix_PlayChannel(-1, gameSuccess, 0);
             
-            if (currentScene != sceneList[0])
+
+            if (currentScene != sceneList[0] && 
+                button == 1 &&
+                !currentScene->state.gameFailed &&
+                !currentScene->state.gameSuccess)
             {
-                bool hit = CheckCollision(currentScene->state.mouse, currentScene->state.target);
-                if (hit)
+                val1 = (((720.0 - y) / 720.0) * 18.0) - (18.0 / 2.0);
+                val2 = currentScene->state.target[0].position.y;
+                bool hit = false;
+                hit = CheckCollision(unit_x, unit_y, &currentScene->state.target[0]);
+                if (hit && !currentScene->state.gameFailed)
                 {
-                    //currentScene->state.target->isActive = false;
-                    Mix_PlayChannel(-1, gameSuccess, 0);
+                    currentScene->state.spawnTime = currentScene->state.time;
+                    currentScene->state.target[0].respawn = true;
+                    Mix_PlayChannel(-1, squash, 0);
+                    score++;
                 }
-                currentScene->state.mouse[0].position = glm::vec3(unit_x, unit_y, 0);
+
+                //if (button == 1) Mix_PlayChannel(-1, gameFailed, 0); //left click
+
             }
             break;
 
         }
     }
-
+    
     const Uint8* keys = SDL_GetKeyboardState(NULL);
 
     if (!currentScene->state.gameSuccess)
@@ -167,34 +186,6 @@ void ProcessInput() {
             SwitchToScene(sceneList[1]);
         }
     }
-
-    //int x, y;
-    //SDL_GetMouseState(&x, &y);
-    //int unit_x = ((x / 1280) * 18) - (18 / 2.0);
-    //int unit_y = (((1280 - y) / 32) * 720) - (720 / 2.0);
-
-    //if (currentScene != sceneList[0]) currentScene->state.mouse[0].position = glm::vec3(unit_x, unit_y, 0);
-
-    //if (SDL_GetMouseState(NULL, NULL) && SDL_BUTTON(SDL_BUTTON_LEFT) && currentScene != sceneList[0])
-    //{
-    //    bool hit = CheckCollision(currentScene->state.mouse, currentScene->state.target);
-    //    if (hit)
-    //    {
-    //        //currentScene->state.target->isActive = false;
-    //        Mix_PlayChannel(-1, gameSuccess, 0);
-    //    }
-    //    
-    //    //call update function to check if collides with enemy entity, if so then make noise
-    //        //make enemy render false
-    //    //CheckCollision(currentScene->state.mouse, currentScene->state.target);
-    //    //currentScene->state.mouse->CheckCollision(currentScene->state.target);
-
-    //    currentScene->state.click = true;
-    //}
-
-    if (glm::length(currentScene->state.mouse->movement) > 1.0f) {
-        currentScene->state.mouse->movement = glm::normalize(currentScene->state.mouse->movement);
-    }
     
 }
 
@@ -202,7 +193,7 @@ void ProcessInput() {
 #define FIXED_TIMESTEP 0.0166666f
 float lastTicks = 0;
 float accumulator = 0.0f;
-
+float diffTick = 0;
 void Update() 
 {
     float ticks = (float)SDL_GetTicks() / 1000.0f;
@@ -221,32 +212,56 @@ void Update()
         deltaTime -= FIXED_TIMESTEP;
     }
 
-    if (seconds < currentScene->state.time_limit &&
-        currentScene != sceneList[0])
+    if (currentScene == sceneList[0])
     {
-        seconds = ticks;
+        diffTick = ticks;
     }
 
-    accumulator = deltaTime;
+    if (currentScene->state.time != 0.0 &&
+        currentScene != sceneList[0])
+    {
+        currentScene->state.time = ticks - diffTick;
+        currentScene->state.time = 61.0 - currentScene->state.time;
 
-    viewMatrix = glm::mat4(1.0f);
-    viewMatrix = glm::translate(viewMatrix, glm::vec3(-5, 3.75, 0));
-    
-    //if (currentScene->state.mouse->enemyAttack)
-    //{
-    //    currentScene->state.mouse->enemyAttack = false;
-    //}
-
-    //if (currentScene->state.mouse->enemyKilled)
-    //{
-    //    currentScene->state.mouse->enemyKilled = false;
-    //    Mix_PlayChannel(-1, squash, 0);
-    //}
+        //after a certain time, it has to spawn at new location
+        //if (currentScene->state.spawnTime - currentScene->state.time >= durationTime)
+        //{
+        //    currentScene->state.target[0].respawn = true;
+        //    currentScene->state.spawnTime = currentScene->state.time;
+        //}
+    }
 
 
-    //update score
+    if (currentScene->state.time < -1.0)
+    {
+        currentScene->state.time = 0.0;
+        currentScene->state.gameFailed = true;
+        currentScene->state.target[0].isActive = false;
+    }
 
+    //winning condition for level
+    if (currentScene != sceneList[0] &&
+        currentScene->state.goal == score)
+    {
+        //CHANGE SOUND
+        Mix_PlayChannel(-1, gameSuccess, 0);
+        currentScene->state.spawnTime = 61;
+        //5 levels total
+        //ISSUE WITH LEVEL AND GOAL NOT MATCHING FOR CURRENT SCENE AND SCENELIST            
 
+        if (currentScene->state.level == 4)
+        {
+            currentScene->state.gameSuccess = true;
+        }
+        else
+        {
+            sceneList[0]->state.level++;
+            sceneList[0]->state.startGame = false;
+            sceneList[1]->state.level++;
+            //sceneList[1]->state.spawnTime = 61.0;
+            score = 0;
+        }
+    }
 }
 
 void Render() 
@@ -258,35 +273,33 @@ void Render()
     currentScene->Render(&program);
 
     GLuint fontTextureID = Util::LoadTexture("font1.png");
-    glm::vec3 scorePosition, centerText;
-    if (currentScene->state.mouse->position.x > 5)
-    {
-        scorePosition = glm::vec3(currentScene->state.mouse->position.x - 4.3, -0.5, 0);
-        centerText = glm::vec3(currentScene->state.mouse->position.x - 1.5, -3, 0);
-    }
-    else
-    {
-        scorePosition = glm::vec3(0.7, -0.5, 0);
-        centerText = glm::vec3(3.5 , -3, 0);
-    }
 
-    int limit = currentScene->state.time_limit;
-    if (currentScene != sceneList[0]) Util::DrawText(&program, fontTextureID, "Time Limit: " + std::to_string(limit) + " sec", 0.75, -0.1, glm::vec3(1, 5, 0));
-    if (currentScene != sceneList[0]) Util::DrawText(&program, fontTextureID, "Timer: " + std::to_string(int(seconds)) + " sec", 0.75, -0.1, glm::vec3(2.5, 4, 0));
-    if (currentScene != sceneList[0]) Util::DrawText(&program, fontTextureID, "Score: " + std::to_string(score), 0.5, -0.1, scorePosition);
-
+    if (currentScene != sceneList[0] && 
+        !currentScene->state.gameSuccess &&
+        !currentScene->state.gameFailed)
+    {
+        //currentScene is going to be sceneList[1]
+        Util::DrawText(&program, fontTextureID, "Level " + std::to_string(int(currentScene->state.level)), 0.75, -0.1, glm::vec3(-2, 8.5, 0));
+        Util::DrawText(&program, fontTextureID, "Timer: " + std::to_string(int(currentScene->state.time)) + " sec", 0.75, -0.1, glm::vec3(-4.5, 7.5, 0));
+        Util::DrawText(&program, fontTextureID, "Goal: " + std::to_string(int(currentScene->state.goal)) , 0.75, -0.1, glm::vec3(11, 8.5, 0));
+        Util::DrawText(&program, fontTextureID, "Score: " + std::to_string(score), 0.75, -0.1, glm::vec3(-15, 8.5, 0));
+        Util::DrawText(&program, fontTextureID, std::to_string(sceneList[1]->state.spawnTime), 0.75, -0.1, glm::vec3(0, -2, 0));
+        Util::DrawText(&program, fontTextureID, std::to_string(val1), 2, -0.1, glm::vec3(-2, -4, 0));
+        Util::DrawText(&program, fontTextureID, std::to_string(val2), 2, -0.1, glm::vec3(-2, -5, 0));
+    }
 
     if (currentScene->state.gameSuccess)
     {
         Mix_PlayChannel(-1, gameSuccess, 0);
-        Util::DrawText(&program, fontTextureID, "You Win!", 0.5, -0.1, centerText);
+        Util::DrawText(&program, fontTextureID, "You Win!", 0.75, -0.1, glm::vec3(-2, 0, 0));
+        currentScene->state.target[0].isActive = false;
+        currentScene->state.respawn = false;
     }
     if (currentScene->state.gameFailed)
     {
         Mix_PlayChannel(-1, gameFailed, 0);
-        Util::DrawText(&program, fontTextureID, "You Lost!", 0.5, -0.1, centerText);
+        Util::DrawText(&program, fontTextureID, "You Lost!", 0.75, -0.1, glm::vec3(-2, 0, 0));
     }
-
     SDL_GL_SwapWindow(displayWindow);
 }
 

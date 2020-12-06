@@ -14,14 +14,16 @@
 #include <time.h>
 
 struct GameState {
-	Entity* mouse;
 	Entity* target;
-	int nextScene;
+	int nextScene, goal;
+	float time = -1.0;
+	int level = 1;
+	float spawnTime = 61.0;
 	bool startGame = false;
 	bool gameFailed = false;
 	bool gameSuccess = false;
-	int time_limit;
-	bool click = false;
+	bool levelCleared = false;
+	bool respawn = false;
 };
 
 class Scene {

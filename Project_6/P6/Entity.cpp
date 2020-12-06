@@ -11,18 +11,6 @@ Entity::Entity()
     modelMatrix = glm::mat4(1.0f);
 }
 
-//bool Entity::CheckCollision(Entity* other)
-//{
-//    if (other == this) return false; //cannot collide with itself (the buggy in and out movement)
-//    if (isActive == false || other->isActive == false) return false;
-//    float xdist = fabs(position.x - other->position.x) - ((width + other->width) / 2.0f);
-//    float ydist = fabs(position.y - other->position.y) - ((width + other->width) / 2.0f);
-//
-//    if (xdist < 0 && ydist < 0) return true;
-//
-//    return false;
-//}
-
 bool Entity::CheckCollision(Entity* other)
 {
     if (isActive == false || other->isActive == false) return false;
@@ -35,129 +23,44 @@ bool Entity::CheckCollision(Entity* other)
     return false;
 }
 
-/*
-//if collided --> see how much collided into the other platform
-//if into the platofrm below, move object up that penetration amount
-void Entity::CheckCollisionsY(Entity* objects, int objectCount)
-{
-    for (int i = 0; i < objectCount; i++)
-    {
-        Entity* object = &objects[i];
-
-        if (CheckCollision(object))
-        {
-            float ydist = fabs(position.y - object->position.y);
-            float penetrationY = fabs(ydist - (height / 2.0f) - (object->height / 2.0f));
-            if (velocity.y > 0)
-            {
-                position.y -= penetrationY;
-                velocity.y = 0;
-                collidedTop = true;
-                LastCollided = object->entityType;
-                LastCollidedEntity = object;
-            }
-            else if (velocity.y < 0)
-            {
-                position.y += penetrationY;
-                velocity.y = 0;
-                collidedBottom = true;
-                LastCollided = object->entityType;
-                LastCollidedEntity = object;
-                if (entityType == MOUSE)
-                {
-                    if (LastCollided == TARGET)
-                    {
-                        position.y -= penetrationY;
-                        LastCollidedEntity->isActive = false;
-                    }
-                }
-            }
-        }
-    }
-}
-
-//if collided --> see how much collided into the other platform
-//if into the platofrm below, move object down that penetration amount
-void Entity::CheckCollisionsX(Entity* objects, int objectCount)
-{
-    for (int i = 0; i < objectCount; i++)
-    {
-        Entity* object = &objects[i];
-
-        if (CheckCollision(object))
-        {
-            float xdist = fabs(position.x - object->position.x);
-            float penetrationX = fabs(xdist - (width / 2.0f) - (object->width / 2.0f));
-            if (velocity.x > 0)
-            {
-                position.x -= penetrationX;
-                velocity.x = 0;
-                collidedRight = true;
-                LastCollided = object->entityType;
-                LastCollidedEntity = object;
-                if (entityType == MOUSE && LastCollided == TARGET)
-                {
-                    position.x += penetrationX;
-                }
-            }
-            else if (velocity.x < 0)
-            {
-                position.x += penetrationX;
-                velocity.x = 0;
-                collidedLeft = true;
-                LastCollided = object->entityType;
-                LastCollidedEntity = object;
-                if (entityType == MOUSE && LastCollided == TARGET)
-                {
-                    position.x -= penetrationX;
-                }
-            }
-        }
-    }
-}
-*/
-
 
 void Entity::AILinear()
 {
     //generate random direction and then move
-}
-
-//input of an entity so that entity could react
-void Entity::AI(Entity* mouse)
-{
-    switch (aiType)
+    if (position.x > 16 - width / 2 ||  //don't let it go past right boundary
+        position.x < -16 + width / 2)   //don't let it go past left boundary
     {
-    case LINEAR:
-        AILinear();
-        break;
+        movement.x *= -1;
     }
-
+    if (position.y > 9 - height / 2 ||   //don't let it go past upper boundary
+        position.y < -9 + height / 2)    //don't let it go past lower boundary
+    {
+        movement.y *= -1;
+    }
 }
 
-void Entity::Update(float deltaTime, Entity* mouse, Entity* objects, int objectCount)
+void Entity::Update(float deltaTime, Entity* objects, int objectCount)
 {
 
     if (entityType == TARGET)
     {
-        AI(mouse);
-    }
-
-    bool hit = false;
-    if (entityType == MOUSE)
-    {
-        hit = CheckCollision(objects);
-    }
-
-    if (hit)
-    {
-        objects->position = glm::vec3(0);
-        hit = false;
-        objects->isActive = false;
+        AILinear();
     }
 
     modelMatrix = glm::mat4(1.0f);
-    modelMatrix = glm::translate(modelMatrix, position);
+
+    float move = width / 2;
+    modelMatrix = glm::translate(modelMatrix, glm::vec3(position.x, position.y, 0));
+
+    float scale_x = width;
+    float scale_y = height;
+    modelMatrix = glm::scale(modelMatrix, glm::vec3(scale_x, scale_y, 1));
+
+    velocity.x = movement.x * speed;
+    velocity.y = movement.y * speed;
+    position.y += velocity.y * deltaTime;
+    position.x += velocity.x * deltaTime;
+
 }
 
 
@@ -181,4 +84,5 @@ void Entity::Render(ShaderProgram* program)
 
     glDisableVertexAttribArray(program->positionAttribute);
     glDisableVertexAttribArray(program->texCoordAttribute);
+
 }

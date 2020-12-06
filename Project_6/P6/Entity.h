@@ -12,7 +12,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "ShaderProgram.h"
 
-enum EntityType {MOUSE, TARGET};
+enum EntityType {TARGET};
 
 enum AIType { AILINEAR };
 enum AIState { LINEAR};
@@ -34,10 +34,6 @@ public:
 
     glm::mat4 modelMatrix;
 
-    int spawn_x = (rand() % 30) - 15; //to get random value ranging from -14 to 14
-    int spawn_y = (rand() % 15) - 8; //to get random value ranging from -7 to 7
-
-
     float width = 1;
     float height = 1;
 
@@ -45,17 +41,11 @@ public:
     bool respawn = false;
 
     Entity();
-    Entity* LastCollidedEntity;
-    EntityType LastCollided;
-
-    void CheckCollisionsY(Entity* objects, int objectCount);
-    void CheckCollisionsX(Entity* objects, int objectCount);
 
     bool CheckCollision(Entity* other);
-    void Update(float deltaTime, Entity* player, Entity* objects, int objectCount);
+    void Update(float deltaTime, Entity* objects, int objectCount);
     void Render(ShaderProgram* program);
 
-    void AI(Entity* player);
     void AILinear();
 
 };
