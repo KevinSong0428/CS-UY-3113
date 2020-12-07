@@ -33,23 +33,26 @@ void Level1::Initialize() {
     srand(time(NULL));
 
     state.target = new Entity[LEVEL1_target_COUNT];
-    //GLuint targetTextureID = Util::LoadTexture("mushroom.png");
-    GLuint targetTextureID = Util::LoadTexture("ctg.png");
+    GLuint targetTextureID = Util::LoadTexture("mushroom.png");
     //GLuint targetTextureID = Util::LoadTexture("IU.jpg");
 
     state.target[0].entityType = TARGET;
     state.target[0].textureID = targetTextureID;
-    //state.target[0].position = glm::vec3(spawn_x(), spawn_y(), 0);
-    state.target[0].position = glm::vec3(0, 0, 0);
-    state.target[0].speed = 1;
+    state.target[0].position = glm::vec3(spawn_x(), spawn_y(), 0);
+    state.target[0].speed = 2;
     state.target[0].aiType = AILINEAR;
     state.target[0].aiState = LINEAR;
     state.target[0].respawn = false;
-    //rand_movement(&state.target[0]);
+    rand_movement(&state.target[0]);
 }
 
 void Level1::Update(float deltaTime) 
 {
+    state.goal = state.level * 5 + 10;
+
+    //5 - 4 - 3 - 2 - 1
+    state.durationTime = 6 - state.level;
+
     if (state.level == 1 ||
         state.level == 2)
     {
@@ -58,31 +61,36 @@ void Level1::Update(float deltaTime)
     }
     else if (state.level == 3)
     {
+        state.target[0].speed = 5.5;
         state.target[0].width = 1.5;
         state.target[0].height = 1.5;
     }
     else if (state.level == 4)
     {
+        state.target[0].speed = 6.5;
         state.target[0].width = 1;
         state.target[0].height = 1;
+        state.goal += 5;
     }
-    //else
-    //{
-    //    state.target[0].width = 0.75;
-    //    state.target[0].height = 0.75;
-    //}
+    else if (state.level == 5)
+    {
+        state.target[0].speed = 8;
+        state.goal += 5;
+        state.durationTime = 1.5;
+    }
 
+    if (state.level == 2) state.target[0].speed = 5;
 
-    state.goal = state.level * 5 + 10;
-
-    if (state.target[0].respawn)
+    if (state.target[0].respawn &&
+        !state.gameFailed && 
+        !state.gameSuccess)
     {
         state.target[0].respawn = false;
         if (state.target[0].isActive) state.target[0].isActive = false;
-        //state.target[0].position = glm::vec3(spawn_x(), spawn_y(), 0);
-        state.target[0].position = glm::vec3(0, 0, 0);
+        state.target[0].position = glm::vec3(spawn_x(), spawn_y(), 0);
         state.target[0].isActive = true;
-        //rand_movement(&state.target[0]);
+        rand_movement(&state.target[0]);
+        state.spawnTime = state.time;
     }
 
     state.target[0].Update(deltaTime, state.target, LEVEL1_target_COUNT);
@@ -91,6 +99,7 @@ void Level1::Update(float deltaTime)
     {
         state.nextScene = 0;
         prev_level = state.level;
+        state.spawnTime = 61.0;
     }
 
 }
