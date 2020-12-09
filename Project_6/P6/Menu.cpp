@@ -1,8 +1,8 @@
 #include "Menu.h"
 
 
-void Menu::Initialize() {
-
+void Menu::Initialize() 
+{
     state.nextScene = -1;
 }
 
@@ -21,7 +21,8 @@ void Menu::Render(ShaderProgram* program) {
     {
         if (state.level < 2)
         {
-            Util::DrawText(program, fontTextureID, "Shoot the Targets!", 1, -0.25, glm::vec3(-6.5, 5.5, 0));
+            //Util::DrawText(program, fontTextureID, "Shoot the Targets!", 1, -0.25, glm::vec3(-6.5, 5.5, 0));
+            Util::DrawText(program, fontTextureID, "Shoot the Aliens!", 1, -0.25, glm::vec3(-6.4, 5.5, 0));
             Util::DrawText(program, fontTextureID, "Click to Shoot! Reach the goal within a minute!", 0.75, -0.1, glm::vec3(-14.75, 0.5, 0));
             Util::DrawText(program, fontTextureID, "Pass all five levels to win!", 0.75, -0.1, glm::vec3(-9.5, -0.5, 0));
             Util::DrawText(program, fontTextureID, "As you progress, the speed will increase and disappear faster!", 0.75, -0.25, glm::vec3(-15, -1.5, 0));

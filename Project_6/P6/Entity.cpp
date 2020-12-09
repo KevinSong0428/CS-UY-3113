@@ -23,7 +23,6 @@ bool Entity::CheckCollision(Entity* other)
     return false;
 }
 
-
 void Entity::AILinear()
 {
     //generate random direction and then move
@@ -39,12 +38,39 @@ void Entity::AILinear()
     }
 }
 
+void Entity::switchDirection()
+{
+    if (walkRight)
+    {
+        walkRight = false;
+        walkLeft = true;
+    }
+    else
+    {
+        walkRight = true;
+        walkLeft = false;
+    }
+}
+
+void Entity::AIRoam(float deltaTime)
+{
+    angle = 2 * deltaTime;
+    position = glm::vec3(position.x + sin(angle), position.y + sin(angle), 0);
+}
+
+//void Entity::AIRoam(float deltaTime)
+//{
+//    angle = 3 * deltaTime;
+//    position = glm::vec3(position.x / 2 + cos(angle), position.y / 2 + cos(angle), 0);
+//}
+
 void Entity::Update(float deltaTime, Entity* objects, int objectCount)
 {
 
     if (entityType == TARGET)
     {
-        AILinear();
+        if (aiType == AILINEAR) AILinear();
+        else if (aiType == AIROAM) AIRoam(deltaTime);
     }
 
     modelMatrix = glm::mat4(1.0f);

@@ -25,7 +25,8 @@ SDL_Window* displayWindow;
 bool gameIsRunning = true;
 
 ShaderProgram program;
-glm::mat4 viewMatrix, modelMatrix, projectionMatrix;
+glm::mat4 viewMatrix, modelMatrix, projectionMatrix, 
+space1Matrix, space2Matrix, space3Matrix, space4Matrix;
 
 Scene* currentScene;
 Scene* sceneList[2];
@@ -39,17 +40,16 @@ void SwitchToScene(Scene* scene) {
 
 //variable for musics
 Mix_Music* music;
-Mix_Chunk* squash;
+Mix_Chunk* laser;
 Mix_Chunk* gameSuccess;
 Mix_Chunk* gameFailed;
 
-//timer varaible
-time_t start;
-
+//space background
+GLuint space1TextureID, space2TextureID;
 
 void Initialize() {
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
-    displayWindow = SDL_CreateWindow("Aim Training", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, SDL_WINDOW_OPENGL);
+    displayWindow = SDL_CreateWindow("Shoot the Aliens!", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, SDL_WINDOW_OPENGL);
     SDL_GLContext context = SDL_GL_CreateContext(displayWindow);
     SDL_GL_MakeCurrent(displayWindow, context);
     
@@ -62,22 +62,46 @@ void Initialize() {
     program.Load("shaders/vertex_textured.glsl", "shaders/fragment_textured.glsl");
 
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
-    //music = Mix_LoadMUS("dooblydoo.mp3");
+    music = Mix_LoadMUS("supernatural.mp3");
     Mix_PlayMusic(music, -1);
     Mix_VolumeMusic(MIX_MAX_VOLUME / 10);
 
-    squash = Mix_LoadWAV("bounce.wav");
-    gameSuccess = Mix_LoadWAV("gameover.wav");
+    /*
+    Supernatural by Kevin MacLeod
+    Link: https://incompetech.filmmusic.io/song/4446-supernatural
+    License: http://creativecommons.org/licenses/by/4.0/ 
+    */
+
+    laser = Mix_LoadWAV("laser.wav");
+    gameSuccess = Mix_LoadWAV("success.wav");
     gameFailed = Mix_LoadWAV("failure.wav");
     Mix_Volume(-1, MIX_MAX_VOLUME / 10);
 
     viewMatrix = glm::mat4(1.0f);
     modelMatrix = glm::mat4(1.0f);
+    space1Matrix = glm::mat4(1.0f);
+    space2Matrix = glm::mat4(1.0f);
+    space3Matrix = glm::mat4(1.0f);
+    space4Matrix = glm::mat4(1.0f);
+    
     projectionMatrix = glm::ortho(-16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f);
+
+    //background
+    space1TextureID = Util::LoadTexture("space1.png");
+    space2TextureID = Util::LoadTexture("space2.png");
+    space1Matrix = glm::translate(space1Matrix, glm::vec3(8, 4.5, 0));
+    space1Matrix = glm::scale(space1Matrix, glm::vec3(16, 9, 1));
+    space2Matrix = glm::translate(space2Matrix, glm::vec3(-8, 4.5, 0));
+    space2Matrix = glm::scale(space2Matrix, glm::vec3(16, 9, 1));
+    space3Matrix = glm::translate(space3Matrix, glm::vec3(-8, -4.5, 0));
+    space3Matrix = glm::scale(space3Matrix, glm::vec3(16, 9, 1));
+    space4Matrix = glm::translate(space4Matrix, glm::vec3(8, -4.5, 0));
+    space4Matrix = glm::scale(space4Matrix, glm::vec3(16, 9, 1));
 
     program.SetProjectionMatrix(projectionMatrix);
     program.SetViewMatrix(viewMatrix);
 
+    
     glUseProgram(program.programID);
 
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
@@ -89,10 +113,6 @@ void Initialize() {
     sceneList[1] = new Level1();
     SwitchToScene(sceneList[0]);
 
-    if (currentScene != sceneList[0])
-    {
-        start = time(0);
-    }
 }
 
 bool CheckCollision(float unit_x, float unit_y, Entity* other)
@@ -156,8 +176,7 @@ void ProcessInput()
                 {
                     currentScene->state.spawnTime = currentScene->state.time;
                     currentScene->state.target[0].respawn = true;
-                    //Mix_PlayChannel(-1, squash, 0);
-                    Mix_PlayChannel(-1, squash, 0);
+                    Mix_PlayChannel(-1, laser, 0);
                     score++;
                 }
             }
@@ -186,6 +205,7 @@ float accumulator = 0.0f;
 float diffTick = 0;
 void Update() 
 {
+
     float ticks = (float)SDL_GetTicks() / 1000.0f;
     float deltaTime = ticks - lastTicks;
     lastTicks = ticks;
@@ -247,9 +267,42 @@ void Update()
     }
 }
 
+void drawBackground()
+{
+    float vertices[] = { -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5 };
+    float texCoords[] = { 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0 };
+
+    glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0, vertices);
+    glEnableVertexAttribArray(program.positionAttribute);
+    glVertexAttribPointer(program.texCoordAttribute, 2, GL_FLOAT, false, 0, texCoords);
+    glEnableVertexAttribArray(program.texCoordAttribute);
+
+    program.SetModelMatrix(space1Matrix);
+    glBindTexture(GL_TEXTURE_2D, space1TextureID);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    program.SetModelMatrix(space2Matrix);
+    glBindTexture(GL_TEXTURE_2D, space2TextureID);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    program.SetModelMatrix(space3Matrix);
+    glBindTexture(GL_TEXTURE_2D, space1TextureID);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    program.SetModelMatrix(space4Matrix);
+    glBindTexture(GL_TEXTURE_2D, space2TextureID);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    glDisableVertexAttribArray(program.positionAttribute);
+    glDisableVertexAttribArray(program.texCoordAttribute);
+
+}
+
 void Render() 
 {
     glClear(GL_COLOR_BUFFER_BIT);
+    
+    drawBackground();
 
     program.SetViewMatrix(viewMatrix);
 
@@ -271,7 +324,7 @@ void Render()
     if (currentScene->state.gameSuccess &&
         !currentScene->state.gameFailed)
     {
-        Mix_PlayChannel(-1, gameSuccess, 0);
+        Mix_PlayChannel(-1, gameSuccess, 1);
         Util::DrawText(&program, fontTextureID, "You Win!", 0.75, -0.1, glm::vec3(-2, 0, 0));
     }
     if (currentScene->state.gameFailed &&

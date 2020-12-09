@@ -14,7 +14,7 @@
 
 enum EntityType {TARGET};
 
-enum AIType { AILINEAR };
+enum AIType { AILINEAR, AIROAM };
 enum AIState { LINEAR};
 
 class Entity {
@@ -29,6 +29,7 @@ public:
     glm::vec3 velocity;
 
     float speed;
+    float angle = 0.0f;
 
     GLuint textureID;
 
@@ -40,12 +41,17 @@ public:
     bool isActive = true;
     bool respawn = false;
 
+    bool walkLeft = false;
+    bool walkRight = true;
+
     Entity();
 
     bool CheckCollision(Entity* other);
     void Update(float deltaTime, Entity* objects, int objectCount);
     void Render(ShaderProgram* program);
+    void switchDirection();
 
     void AILinear();
+    void AIRoam(float deltaTime);
 
 };
