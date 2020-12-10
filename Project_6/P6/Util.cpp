@@ -7,10 +7,10 @@ GLuint Util::LoadTexture(const char* filePath) {
 	int w, h, n;
 	unsigned char* image = stbi_load(filePath, &w, &h, &n, STBI_rgb_alpha);
 
-	if (image == NULL) {
-		std::cout << "Unable to load image. Make sure the path is correct\n";
-		assert(false);
-	}
+	//if (image == NULL) {
+	//	std::cout << "Unable to load image. Make sure the path is correct\n";
+	//	assert(false);
+	//}
 
 	GLuint textureID;
 	glGenTextures(1, &textureID);
@@ -20,10 +20,10 @@ GLuint Util::LoadTexture(const char* filePath) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
+
 	stbi_image_free(image);
 	return textureID;
 }
-
 void Util::DrawText(ShaderProgram* program, GLuint fontTexture, std::string text, float size,
 	float spacing, glm::vec3 position) {
 	float width = 1.0f / 16.0f;

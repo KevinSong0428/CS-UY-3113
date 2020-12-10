@@ -38,31 +38,19 @@ void Entity::AILinear()
     }
 }
 
-void Entity::switchDirection()
+void Entity::AICircle1()
 {
-    if (walkRight)
-    {
-        walkRight = false;
-        walkLeft = true;
-    }
-    else
-    {
-        walkRight = true;
-        walkLeft = false;
-    }
+    angle += 0.1;
+    position.x = width / 2 + cos(angle) + roamRand;
+    position.y = height / 2 + sin(angle) + roamRand + 5;
 }
 
-void Entity::AIRoam(float deltaTime)
+void Entity::AICircle2()
 {
-    angle = 2 * deltaTime;
-    position = glm::vec3(position.x + sin(angle), position.y + sin(angle), 0);
+    angle += 0.1;
+    position.x = height / 2 + sin(angle) + roamRand + 10;
+    position.y = width / 2 + cos(angle) + roamRand + 5;
 }
-
-//void Entity::AIRoam(float deltaTime)
-//{
-//    angle = 3 * deltaTime;
-//    position = glm::vec3(position.x / 2 + cos(angle), position.y / 2 + cos(angle), 0);
-//}
 
 void Entity::Update(float deltaTime, Entity* objects, int objectCount)
 {
@@ -70,7 +58,8 @@ void Entity::Update(float deltaTime, Entity* objects, int objectCount)
     if (entityType == TARGET)
     {
         if (aiType == AILINEAR) AILinear();
-        else if (aiType == AIROAM) AIRoam(deltaTime);
+        else if (aiType == AICIRCLE1) AICircle1();
+        else if (aiType == AICIRCLE2) AICircle2();
     }
 
     modelMatrix = glm::mat4(1.0f);

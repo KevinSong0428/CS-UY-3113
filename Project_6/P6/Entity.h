@@ -14,7 +14,7 @@
 
 enum EntityType {TARGET};
 
-enum AIType { AILINEAR, AIROAM };
+enum AIType { AILINEAR, AICIRCLE1, AICIRCLE2};
 enum AIState { LINEAR};
 
 class Entity {
@@ -30,6 +30,7 @@ public:
 
     float speed;
     float angle = 0.0f;
+    int roamRand = 0;
 
     GLuint textureID;
 
@@ -41,17 +42,14 @@ public:
     bool isActive = true;
     bool respawn = false;
 
-    bool walkLeft = false;
-    bool walkRight = true;
-
     Entity();
 
     bool CheckCollision(Entity* other);
     void Update(float deltaTime, Entity* objects, int objectCount);
     void Render(ShaderProgram* program);
-    void switchDirection();
 
     void AILinear();
-    void AIRoam(float deltaTime);
+    void AICircle1();
+    void AICircle2();
 
 };

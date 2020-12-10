@@ -28,10 +28,13 @@ void rand_movement(Entity* other)
 
 void rand_AI(Entity* other)
 {
-    int var = rand() % 2;
+    int var = rand() % 3;
     if (var == 0) other->aiType = AILINEAR;
-    else other->aiType = AIROAM;
+    else if (var == 1) other->aiType = AICIRCLE1;
+    else other->aiType = AICIRCLE2;
 }
+
+GLuint targetTexture1ID, targetTexture2ID;
 
 void Level1::Initialize() {
 
@@ -41,23 +44,23 @@ void Level1::Initialize() {
 
     state.target = new Entity[LEVEL1_target_COUNT];
 
-    GLuint targetTextureID = Util::LoadTexture("UFO.png");
+    targetTexture1ID = Util::LoadTexture("UFO.png");
+    targetTexture2ID = Util::LoadTexture("UFO1.png");
 
-    state.target[0].textureID = targetTextureID;
+    state.target[0].textureID = targetTexture1ID;
     state.target[0].entityType = TARGET;
     state.target[0].position = glm::vec3(spawn_x(), spawn_y(), 0);
     state.target[0].speed = 2;
     state.target[0].aiState = LINEAR;
+    state.target[0].aiType = AILINEAR;
     state.target[0].respawn = false;
     rand_movement(&state.target[0]);
-    rand_AI(&state.target[0]);
 }
 
 void Level1::Update(float deltaTime) 
 {
 
     state.goal = state.level * 5 + 10;
-
 
     if (state.target[0].respawn &&
         !state.gameFailed &&
@@ -71,37 +74,33 @@ void Level1::Update(float deltaTime)
         rand_movement(&state.target[0]);
         state.spawnTime = state.time;
 
-        //HERE IS THE LAGGY CODE COMMENTED OUT
-
-        //if (state.target[0].aiType == LINEAR)
-        //{
-        //    GLuint targetTextureID = Util::LoadTexture("UFO.png");
-        //    state.target[0].textureID = targetTextureID;
-        //}
-        //else
-        //{
-        //    GLuint targetTextureID = Util::LoadTexture("UFO1.png");
-        //    state.target[0].textureID = targetTextureID;
-        //}
+        if (state.target[0].aiType == AILINEAR)
+        {
+            state.target[0].textureID = targetTexture1ID;
+        }
+        else
+        {
+            int var = 10 - abs(state.target[0].position.y);
+            state.target[0].roamRand = (rand() % var) - var;
+            state.target[0].textureID = targetTexture2ID;
+        }
     }
 
     if (state.level == 1)
     {
         state.target[0].width = 3;
         state.target[0].height = 3;
-        state.durationTime = 3;
+        state.durationTime = 2;
     }
     else if (state.level == 2)
     {
-        state.target[0].width = 3;
-        state.target[0].height = 3;
+        state.target[0].width = 2;
+        state.target[0].height = 2;
         state.target[0].speed = 4;
-        state.durationTime = 0.5;
+        state.durationTime = 0.75;
     }
     else if (state.level == 3)
     {
-        //GLuint targetTextureID = Util::LoadTexture(".png");
-        //state.target[0].textureID = targetTextureID;
         state.target[0].speed = 5.5;
         state.target[0].width = 1.5;
         state.target[0].height = 1.5;
@@ -109,20 +108,17 @@ void Level1::Update(float deltaTime)
     }
     else if (state.level == 4)
     {
-        //GLuint targetTextureID = Util::LoadTexture("UFO1.png");
-        //state.target[0].textureID = targetTextureID;
         state.target[0].speed = 6.5;
         state.target[0].width = 1;
         state.target[0].height = 1;
         state.goal += 5;
-        state.durationTime = 1;
+        state.durationTime = 0.75;
     }
-    else
+    else if (state.level == 5)
     {
-        state.target[0].speed = 8;
+        state.target[0].speed = 7.5;
         state.goal += 5;
-        state.durationTime = 1.5;
-        state.durationTime = 1;
+        state.durationTime = 0.75;
     }
 
     state.target[0].Update(deltaTime, state.target, LEVEL1_target_COUNT);

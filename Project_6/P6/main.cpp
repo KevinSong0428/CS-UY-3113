@@ -152,6 +152,7 @@ void ProcessInput()
                 currentScene->state.startGame = true;
                 if (currentScene->state.nextScene >= 0) SwitchToScene(sceneList[currentScene->state.nextScene]);
                 break;
+
             }
             break;
 
@@ -193,6 +194,23 @@ void ProcessInput()
         {
             currentScene->state.startGame = true;
             SwitchToScene(sceneList[1]);
+        }
+    }
+
+    if (currentScene->state.gameSuccess ||
+        currentScene->state.gameFailed)
+    {
+        if (keys[SDL_SCANCODE_SPACE])
+        {
+            currentScene->state.gameFailed = false;
+            currentScene->state.gameSuccess = false;
+            sceneList[0]->state.level = 1;
+            sceneList[0]->state.startGame = false;
+            sceneList[1]->state.level = 1;
+            score = 0;
+            currentScene->state.time = 61.0;
+            sceneList[0]->state.level = true;
+            SwitchToScene(sceneList[0]);
         }
     }
     
@@ -326,12 +344,14 @@ void Render()
     {
         Mix_PlayChannel(-1, gameSuccess, 1);
         Util::DrawText(&program, fontTextureID, "You Win!", 0.75, -0.1, glm::vec3(-2, 0, 0));
+        Util::DrawText(&program, fontTextureID, "Press Spacebar to Play Again!", 0.75, -0.1, glm::vec3(-9.7, -1, 0));
     }
     if (currentScene->state.gameFailed &&
         !currentScene->state.gameSuccess)
     {
         Mix_PlayChannel(-1, gameFailed, 1);
         Util::DrawText(&program, fontTextureID, "You Lost!", 0.75, -0.1, glm::vec3(-2, 0, 0));
+        Util::DrawText(&program, fontTextureID, "Press Spacebar to Play Again!", 0.75, -0.1, glm::vec3(-9.7, -1, 0));
     }
 
     SDL_GL_SwapWindow(displayWindow);
