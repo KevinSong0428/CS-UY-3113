@@ -7,10 +7,10 @@ GLuint Util::LoadTexture(const char* filePath) {
 	int w, h, n;
 	unsigned char* image = stbi_load(filePath, &w, &h, &n, STBI_rgb_alpha);
 
-	//if (image == NULL) {
-	//	std::cout << "Unable to load image. Make sure the path is correct\n";
-	//	assert(false);
-	//}
+	if (image == NULL) {
+		std::cout << "Unable to load image. Make sure the path is correct\n";
+		assert(false);
+	}
 
 	GLuint textureID;
 	glGenTextures(1, &textureID);
