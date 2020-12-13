@@ -44,12 +44,11 @@ public:
 
     Entity();
 
-    bool CheckCollision(Entity* other);
-    void Update(float deltaTime, Entity* objects, int objectCount);
+    void Update(float deltaTime, Entity* objects);
     void Render(ShaderProgram* program);
 
-    void AILinear();
-    void AICircle1();
-    void AICircle2();
+    void AILinear(float deltaTime);
+    void AICircle1(float deltaTime);
+    void AICircle2(float deltaTime);
 
 };

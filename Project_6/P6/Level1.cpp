@@ -1,6 +1,5 @@
 #include "Level1.h"
 
-#define LEVEL1_target_COUNT 1
 
 int prev_level = 1;
 
@@ -15,7 +14,7 @@ int spawn_y()
     return y;
 }
 
-int zero_to_one()
+int negOne_to_one()
 {
     int var = (rand() % 3) - 1;
     return var;
@@ -23,14 +22,23 @@ int zero_to_one()
 
 void rand_movement(Entity* other)
 {
-    other->movement = glm::vec3(zero_to_one(), zero_to_one(), 0);
+    int x = negOne_to_one();
+    int y = negOne_to_one();
+    //fix speed if going diagonal
+    if (x != 0 &&
+        y != 0)
+    {
+        x *= 2 / sqrt(2);
+        y *= 2 / sqrt(2);
+    }
+    other->movement = glm::vec3(x, y, 0);
 }
 
 void rand_AI(Entity* other)
 {
-    int var = rand() % 3;
-    if (var == 0) other->aiType = AILINEAR;
-    else if (var == 1) other->aiType = AICIRCLE1;
+    int var = rand() % 4;
+    if (var == 0 || var == 1) other->aiType = AILINEAR;
+    else if (var == 2) other->aiType = AICIRCLE1;
     else other->aiType = AICIRCLE2;
 }
 
@@ -42,19 +50,19 @@ void Level1::Initialize() {
 
     srand(time(NULL));
 
-    state.target = new Entity[LEVEL1_target_COUNT];
+    state.target = new Entity();
 
     targetTexture1ID = Util::LoadTexture("UFO.png");
     targetTexture2ID = Util::LoadTexture("UFO1.png");
 
-    state.target[0].textureID = targetTexture1ID;
-    state.target[0].entityType = TARGET;
-    state.target[0].position = glm::vec3(spawn_x(), spawn_y(), 0);
-    state.target[0].speed = 2;
-    state.target[0].aiState = LINEAR;
-    state.target[0].aiType = AILINEAR;
-    state.target[0].respawn = false;
-    rand_movement(&state.target[0]);
+    state.target->textureID = targetTexture1ID;
+    state.target->entityType = TARGET;
+    state.target->position = glm::vec3(spawn_x(), spawn_y(), 0);
+    state.target->speed = 0.55;
+    state.target->aiState = LINEAR;
+    state.target->aiType = AILINEAR;
+    state.target->respawn = false;
+    rand_movement(state.target);
 }
 
 void Level1::Update(float deltaTime) 
@@ -62,66 +70,68 @@ void Level1::Update(float deltaTime)
 
     state.goal = state.level * 5 + 10;
 
-    if (state.target[0].respawn &&
+    if (state.target->respawn &&
         !state.gameFailed &&
         !state.gameSuccess)
     {
-        state.target[0].respawn = false;
-        if (state.target[0].isActive) state.target[0].isActive = false;
-        rand_AI(&state.target[0]);
-        state.target[0].position = glm::vec3(spawn_x(), spawn_y(), 0);
-        state.target[0].isActive = true;
-        rand_movement(&state.target[0]);
+        state.target->respawn = false;
+        if (state.target->isActive) state.target->isActive = false;
+        rand_AI(state.target);
+        state.target->position = glm::vec3(spawn_x(), spawn_y(), 0);
+        state.target->isActive = true;
+        rand_movement(state.target);
         state.spawnTime = state.time;
 
-        if (state.target[0].aiType == AILINEAR)
+        if (state.target->aiType == AILINEAR)
         {
-            state.target[0].textureID = targetTexture1ID;
+            state.target->textureID = targetTexture1ID;
         }
         else
         {
-            int var = 10 - abs(state.target[0].position.y);
-            state.target[0].roamRand = (rand() % var) - var;
-            state.target[0].textureID = targetTexture2ID;
+            int var = 10 - abs(state.target->position.y);
+            state.target->roamRand = (rand() % var) - var;
+            state.target->textureID = targetTexture2ID;
         }
     }
 
     if (state.level == 1)
     {
-        state.target[0].width = 3;
-        state.target[0].height = 3;
+        state.target->width = 3;
+        state.target->height = 3;
         state.durationTime = 2;
     }
     else if (state.level == 2)
     {
-        state.target[0].width = 2;
-        state.target[0].height = 2;
-        state.target[0].speed = 4;
-        state.durationTime = 0.75;
+        state.target->width = 2;
+        state.target->height = 2;
+        state.target->speed = 0.65;
+        state.durationTime = 0.7;
     }
     else if (state.level == 3)
     {
-        state.target[0].speed = 5.5;
-        state.target[0].width = 1.5;
-        state.target[0].height = 1.5;
-        state.durationTime = 1;
+        state.target->speed = 0.75;
+        state.target->width = 1.5;
+        state.target->height = 1.5;
+        state.durationTime = 0.75;
     }
     else if (state.level == 4)
     {
-        state.target[0].speed = 6.5;
-        state.target[0].width = 1;
-        state.target[0].height = 1;
+        state.target->speed = 0.85;
+        state.target->width = 1;
+        state.target->height = 1;
         state.goal += 5;
-        state.durationTime = 0.75;
+        if (state.target->aiType == AILINEAR) state.durationTime = 1.0;
+        else state.durationTime = 0.75;
     }
     else if (state.level == 5)
     {
-        state.target[0].speed = 7.5;
+        state.target->speed = 0.9;
         state.goal += 5;
-        state.durationTime = 0.75;
+        if (state.target->aiType == AILINEAR) state.durationTime = 1.0;
+        else state.durationTime = 0.75;
     }
 
-    state.target[0].Update(deltaTime, state.target, LEVEL1_target_COUNT);
+    state.target->Update(deltaTime, state.target);
 
     if (prev_level != state.level)
     {
@@ -134,6 +144,6 @@ void Level1::Update(float deltaTime)
 
 void Level1::Render(ShaderProgram* program) 
 {
-    state.target[0].Render(program);
+    state.target->Render(program);
 }
 

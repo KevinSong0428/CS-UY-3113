@@ -45,7 +45,8 @@ Mix_Chunk* gameSuccess;
 Mix_Chunk* gameFailed;
 
 //space background
-GLuint space1TextureID, space2TextureID;
+GLuint space1TextureID, space2TextureID, fontTextureID;
+
 
 void Initialize() {
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
@@ -86,6 +87,8 @@ void Initialize() {
     
     projectionMatrix = glm::ortho(-16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f);
 
+    fontTextureID = Util::LoadTexture("font1.png");
+
     //background
     space1TextureID = Util::LoadTexture("space1.png");
     space2TextureID = Util::LoadTexture("space2.png");
@@ -117,7 +120,6 @@ void Initialize() {
 
 bool CheckCollision(float unit_x, float unit_y, Entity* other)
 {
-    if (other->isActive == false) return false;
     if (unit_x >= other->position.x - (other->width / 2) &&         // right of the left edge
         unit_x <= other->position.x + (other->width / 2) &&         // left of the right edge
         unit_y >= other->position.y - (other->height / 2) &&        // below the top
@@ -170,15 +172,17 @@ void ProcessInput()
                 !currentScene->state.gameSuccess)
             {
                 val1 = (((720.0 - y) / 720.0) * 18.0) - (18.0 / 2.0);
-                val2 = currentScene->state.target[0].position.y;
+                val2 = currentScene->state.target->position.y;
                 bool hit = false;
-                hit = CheckCollision(unit_x, unit_y, &currentScene->state.target[0]);
-                if (hit && !currentScene->state.gameFailed)
+                hit = CheckCollision(unit_x, unit_y, currentScene->state.target);
+                int lastScore = currentScene->state.goal - score;
+                bool check = lastScore == 1;
+                if (hit)
                 {
                     currentScene->state.spawnTime = currentScene->state.time;
-                    currentScene->state.target[0].respawn = true;
                     Mix_PlayChannel(-1, laser, 0);
                     score++;
+                    if (!check) currentScene->state.target->respawn = true;
                 }
             }
             break;
@@ -197,8 +201,7 @@ void ProcessInput()
         }
     }
 
-    if (currentScene->state.gameSuccess ||
-        currentScene->state.gameFailed)
+    if (currentScene->state.gameSuccess)
     {
         if (keys[SDL_SCANCODE_SPACE])
         {
@@ -209,11 +212,23 @@ void ProcessInput()
             sceneList[1]->state.level = 1;
             score = 0;
             currentScene->state.time = 61.0;
-            sceneList[0]->state.level = true;
             SwitchToScene(sceneList[0]);
         }
     }
-    
+
+    if (currentScene->state.gameFailed)
+    {
+        if (keys[SDL_SCANCODE_SPACE])
+        {
+            currentScene->state.gameFailed = false;
+            currentScene->state.gameSuccess = false;
+            sceneList[0]->state.startGame = false;
+            score = 0;
+            currentScene->state.time = 61.0;
+            SwitchToScene(sceneList[0]);
+        }
+    }
+   
 }
 
 //60 fps
@@ -255,13 +270,14 @@ void Update()
         if ((currentScene->state.spawnTime - currentScene->state.time) >= 
             sceneList[1]->state.durationTime)
         {
-            currentScene->state.target[0].respawn = true;
+            currentScene->state.target->respawn = true;
         }
     }
 
 
-    if (currentScene->state.time < -1.0)
-    {
+    if (currentScene->state.time <= 0 &&
+        currentScene != sceneList[0])
+    {   
         currentScene->state.time = 0.0;
         currentScene->state.gameFailed = true;
     }
@@ -271,9 +287,10 @@ void Update()
         currentScene->state.goal == score && 
         !currentScene->state.gameSuccess)
     {
-        if (currentScene->state.level == 5)
+        if (sceneList[1]->state.level == 5)
         {
-            currentScene->state.gameSuccess = true;
+            currentScene->state.time = 0.0;
+            sceneList[1]->state.gameSuccess = true;
         }
         else
         {
@@ -326,11 +343,9 @@ void Render()
 
     currentScene->Render(&program);
 
-    GLuint fontTextureID = Util::LoadTexture("font1.png");
-
     if (currentScene != sceneList[0] && 
-        !currentScene->state.gameSuccess &&
-        !currentScene->state.gameFailed)
+        !sceneList[1]->state.gameSuccess &&
+        !sceneList[1]->state.gameFailed)
     {
         //currentScene is going to be sceneList[1]
         Util::DrawText(&program, fontTextureID, "Level " + std::to_string(int(currentScene->state.level)), 0.75, -0.1, glm::vec3(-2, 8.5, 0));
@@ -339,19 +354,19 @@ void Render()
         Util::DrawText(&program, fontTextureID, "Score: " + std::to_string(score), 0.75, -0.1, glm::vec3(-15, 8.5, 0));
     }
 
-    if (currentScene->state.gameSuccess &&
-        !currentScene->state.gameFailed)
+    if (sceneList[1]->state.gameSuccess)
     {
         Mix_PlayChannel(-1, gameSuccess, 1);
         Util::DrawText(&program, fontTextureID, "You Win!", 0.75, -0.1, glm::vec3(-2, 0, 0));
-        Util::DrawText(&program, fontTextureID, "Press Spacebar to Play Again!", 0.75, -0.1, glm::vec3(-9.7, -1, 0));
+        Util::DrawText(&program, fontTextureID, "Press Spacebar to Play Again!", 0.75, -0.1, glm::vec3(-9.25, -1, 0));
     }
+
     if (currentScene->state.gameFailed &&
         !currentScene->state.gameSuccess)
     {
         Mix_PlayChannel(-1, gameFailed, 1);
         Util::DrawText(&program, fontTextureID, "You Lost!", 0.75, -0.1, glm::vec3(-2, 0, 0));
-        Util::DrawText(&program, fontTextureID, "Press Spacebar to Play Again!", 0.75, -0.1, glm::vec3(-9.7, -1, 0));
+        Util::DrawText(&program, fontTextureID, "Press Spacebar to Try Again!", 0.75, -0.1, glm::vec3(-8, -1, 0));
     }
 
     SDL_GL_SwapWindow(displayWindow);

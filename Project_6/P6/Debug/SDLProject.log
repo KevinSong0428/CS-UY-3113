@@ -1,25 +1,11 @@
 ﻿  Level1.cpp
-C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P6\Level1.cpp(43,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P6\Level1.cpp(83,21): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-  main.cpp
-C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P6\main.cpp(160,21): warning C4244: 'initializing': conversion from 'Sint32' to 'float', possible loss of data
-C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P6\main.cpp(161,21): warning C4244: 'initializing': conversion from 'Sint32' to 'float', possible loss of data
-C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P6\main.cpp(164,26): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P6\main.cpp(165,26): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P6\main.cpp(172,55): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P6\main.cpp(173,62): warning C4244: '=': conversion from 'T' to 'int', possible loss of data
-          with
-          [
-              T=float
-          ]
-C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P6\main.cpp(252,41): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P6\main.cpp(336,141): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P6\main.cpp(337,152): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P6\main.cpp(338,141): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P6\main.cpp(339,118): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P6\main.cpp(346,92): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P6\main.cpp(347,116): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P6\main.cpp(353,93): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P6\main.cpp(354,116): warning C4305: 'argument': truncation from 'double' to 'float'
-  Generating Code...
+C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P6\Level1.cpp(31,25): warning C4244: '*=': conversion from 'double' to 'int', possible loss of data
+C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P6\Level1.cpp(32,25): warning C4244: '*=': conversion from 'double' to 'int', possible loss of data
+C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P6\Level1.cpp(51,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P6\Level1.cpp(61,31): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P6\Level1.cpp(91,21): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P6\Level1.cpp(107,35): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P6\Level1.cpp(108,33): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P6\Level1.cpp(119,35): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P6\Level1.cpp(128,34): warning C4305: '=': truncation from 'double' to 'float'
   SDLProject.vcxproj -> C:\Users\Kevin\Documents\CS-UY 3113\CS3113-master\CS3113-master\Templates\VisualStudioSDLProject\P6\Debug\SDLProject.exe

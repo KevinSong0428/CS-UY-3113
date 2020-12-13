@@ -11,19 +11,7 @@ Entity::Entity()
     modelMatrix = glm::mat4(1.0f);
 }
 
-bool Entity::CheckCollision(Entity* other)
-{
-    if (isActive == false || other->isActive == false) return false;
-    if (position.x >= other->position.x &&         // right of the left edge AND
-        position.x <= other->position.x + width &&    // left of the right edge AND
-        position.y >= other->position.y &&         // below the top AND
-        position.y <= other->position.y + height) {    // above the bottom
-        return true;
-    }
-    return false;
-}
-
-void Entity::AILinear()
+void Entity::AILinear(float deltaTime)
 {
     //generate random direction and then move
     if (position.x > 16 - width / 2 ||  //don't let it go past right boundary
@@ -38,28 +26,28 @@ void Entity::AILinear()
     }
 }
 
-void Entity::AICircle1()
+void Entity::AICircle1(float deltaTime)
 {
-    angle += 0.1;
+    angle += 0.5 * speed * deltaTime;
     position.x = width / 2 + cos(angle) + roamRand;
     position.y = height / 2 + sin(angle) + roamRand + 5;
 }
 
-void Entity::AICircle2()
+void Entity::AICircle2(float deltaTime)
 {
-    angle += 0.1;
+    angle += 0.5 * speed * deltaTime;
     position.x = height / 2 + sin(angle) + roamRand + 10;
     position.y = width / 2 + cos(angle) + roamRand + 5;
 }
 
-void Entity::Update(float deltaTime, Entity* objects, int objectCount)
+void Entity::Update(float deltaTime, Entity* objects)
 {
 
     if (entityType == TARGET)
     {
-        if (aiType == AILINEAR) AILinear();
-        else if (aiType == AICIRCLE1) AICircle1();
-        else if (aiType == AICIRCLE2) AICircle2();
+        if (aiType == AILINEAR) AILinear(deltaTime);
+        else if (aiType == AICIRCLE1) AICircle1(deltaTime);
+        else if (aiType == AICIRCLE2) AICircle2(deltaTime);
     }
 
     modelMatrix = glm::mat4(1.0f);

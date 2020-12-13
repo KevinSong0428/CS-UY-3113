@@ -24,7 +24,6 @@ struct GameState {
 	bool gameSuccess = false;
 	bool levelCleared = false;
 	bool respawn = false;
-	bool retry = false;
 	
 	//durationTime = how long target is active for every level
 	float durationTime;
